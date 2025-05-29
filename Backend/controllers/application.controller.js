@@ -110,6 +110,23 @@ if(!status){
 
 }
 
+// find the application by applicant id
+
+const application = await Application.findOne({_id:applicationId})
+
+if(!application){
+            return res.status(404).json({ message: "Application not found", success: false });
+
+}
+
+// update status
+
+application.status = status.toLowerCase()
+await application.save();
+
+return res.status(200).json({ message: "Status Updated Successfully", success: true });
+
+
     } catch (error) {
         console.log(error);
         

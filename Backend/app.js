@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/user.route.js';
 import companyRoutes from './routes/company.route.js';
 import jobRoutes from './routes/job.route.js';
+import applicationRoutes from './routes/application.route.js'
 
 dotenv.config();
 const app = express();
@@ -43,6 +44,16 @@ app.use('/api/v1/job', jobRoutes);
 // "http://localhost:8000/api/v1/job/get"
 // "http://localhost:8000/api/v1/job/get/:id"
 // "http://localhost:8000/api/v1/job/update/:id"
+
+// Api's for applications routes
+
+app.use('/api/v1/application', applicationRoutes);
+// "http://localhost:8000/api/v1/application/apply"
+// "http://localhost:8000/api/v1/application/get"
+// "http://localhost:8000/api/v1/application/get/:id"
+// "http://localhost:8000/api/v1/application/update/:id"
+
+
 
 
 const PORT =process.env.PORT || 3000;
