@@ -10,4 +10,5 @@ router.route('/get/:id').get(isAuthenticated ,getCompanyById)
 router.route('/update/:id').put(  isAuthenticated,updateCompany)
 
 
+
 export default router;

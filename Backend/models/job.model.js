@@ -38,6 +38,11 @@ const jobSchema = new mongoose.Schema(
       required: true, // e.g., Full-time, Part-time, Internship
     },
 
+    experienceLevel: {
+      type: Number, // e.g., "1-3 years", "3-5 years"
+      required: true,
+    },
+
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company", // Reference to the Company model
