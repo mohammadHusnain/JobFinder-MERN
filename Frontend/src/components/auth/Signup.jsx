@@ -8,6 +8,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USER_API_END_POINT } from '../utils/constant'
 import { toast } from 'sonner'
+import { useDispatch, useSelector } from 'react-redux'
+import { setLoading } from '@/redux/authSlice'
 
 
 const Signup = () => {
@@ -22,7 +24,9 @@ const Signup = () => {
     });
     
 
-    const navigate = useNavigate();
+const {loading} = useSelector(state => state.auth)
+      const navigate = useNavigate()
+      const dispatch = useDispatch();
 
     const changeEventHandler = (e) =>{
         setInput({...input , [e.target.name]:e.target.value})
@@ -45,6 +49,7 @@ const Signup = () => {
   }
 
   try {
+    dispatch(setLoading(true));
     const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
       headers: { 'Content-Type': "multipart/form-data" },
       withCredentials: true,
@@ -56,15 +61,19 @@ const Signup = () => {
     }
   } catch (error) {
     console.error("Signup error:", error);
+
     if (error.response && error.response.data && error.response.data.message) {
       toast.error(error.response.data.message);
     } else {
       toast.error("Something went wrong. Please try again.");
     }
+       
   }
+    finally{
+          dispatch(setLoading(false));  
+        }
 }
 
-    
   return (
  <>
     <Navbar/>
@@ -159,8 +168,10 @@ const Signup = () => {
 </div>
     </div>
 
-    <Button type="submit" className="w-full my-4">SignUp</Button>
-    <span className='text-sm'>Already Have An Account ? <Link to='/login' className='text-blue-600 '>Login</Link></span>
+ {
+loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin'/> Please Wait ! </Button>    :     <Button type="submit" className="w-full my-4">Sign Up</Button>
+
+    }    <span className='text-sm'>Already Have An Account ? <Link to='/login' className='text-blue-600 '>Login</Link></span>
 
   </form>
 </div>
