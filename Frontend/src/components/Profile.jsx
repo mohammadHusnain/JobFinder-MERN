@@ -8,6 +8,7 @@ import { Badge } from './ui/badge'
 import { Label } from './ui/label'
 import AppliedJobTable from './AppliedJobTable'
 import UpdateProfileDialog from './updateProfileDialog'
+import { useSelector } from 'react-redux'
 
 const skills = ["Javascript", "ReactJS", "Node", "Express", "NextJs", "NestJs"]
 const isResume = true;
@@ -15,6 +16,8 @@ const isResume = true;
 const Profile = () => {
 
     const [open,setOpen] = useState(false)
+    const {user} = useSelector(store=>store.auth);
+
 
   return (
     <div>
@@ -29,8 +32,8 @@ const Profile = () => {
                     </Avatar>
 
                     <div>
-                        <h1 className='font-medium text-xl'>Full Name</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis nemo, non, similique distinctio placeat eaque repellendus accusamus amet earum reiciendis deleniti! Quisquam impedit incidunt saepe iusto suscipit nobis eveniet assumenda!</p>
+                        <h1 className='font-medium text-xl'>{user?.fullname}</h1>
+                        <p>{user?.profile?.bio}</p>
                     </div>
                 </div>
 
@@ -40,12 +43,12 @@ const Profile = () => {
             <div>
                 <div className="flex items-center gap-3 my-2">
                     <Mail/>
-                    <span>husnain@gmail.com</span>
+                    <span>{user?.email}</span>
                 </div>
 
                 <div className="flex items-center gap-3 my-2">
                     <Contact/>
-                    <span>6543212450</span>
+                    <span>{user?.phoneNumber}</span>
                 </div>
             </div>
 
