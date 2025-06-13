@@ -10,7 +10,7 @@ import AppliedJobTable from './AppliedJobTable'
 import UpdateProfileDialog from './updateProfileDialog'
 import { useSelector } from 'react-redux'
 
-const skills = ["Javascript", "ReactJS", "Node", "Express", "NextJs", "NestJs"]
+// const skills = ["Javascript", "ReactJS", "Node", "Express", "NextJs", "NestJs"]
 const isResume = true;
 
 const Profile = () => {
@@ -55,8 +55,8 @@ const Profile = () => {
             <div className="mt-4">
                 <h1 className="font-medium text-lg mb-2">Skills</h1>
                 <div className="flex flex-wrap gap-2">
-                    {skills.length !== 0 ? 
-                        skills.map((item, index) => (
+                    {user?.profile?.skills.length !== 0 ? 
+                        user?.profile?.skills.map((item, index) => (
                             <Badge key={index} className="whitespace-nowrap">
                                 {item}
                             </Badge>
@@ -70,7 +70,7 @@ const Profile = () => {
             <div className='grid w-full max-w-sm items-center gap-1'>
 <Label className="text-md font-bold ">Resume</Label>
 {
-isResume ? <a target='blank' href='https://youtube.com' className='text-blue-500 w-full hover:underline cursor-pointer'>Husnain Bhinder</a> : <span>NA</span>
+isResume ? <a target='blank' href={user?.profile?.resume} className='text-blue-500 w-full hover:underline cursor-pointer'>{user?.profile?.resumeOriginalName}</a> : <span>NA</span>
 }
             </div>
 

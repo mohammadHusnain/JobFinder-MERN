@@ -104,24 +104,36 @@ export const logout = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
     try {
-        
-const { fullname, email, phoneNumber, bio, skills } = req.body;
+        const { fullname, email, phoneNumber, bio, skills } = req.body;
+        const file = req.file;
 
-// console.log(fullname , email , phoneNumber , bio , skills);
+        // Only process file if it exists
+        let cloudResponse;
+        if (file) {
+            const fileUri = getDataUri(file);
+            if (!fileUri) {
+                return res.status(400).json({
+                    message: "Invalid file format",
+                    success: false
+                });
+            }
 
+             cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+                resource_type: 'auto', // 'auto' detects PDFs automatically
+                public_id: `resumes/${req.id}_${Date.now()}`,
+                overwrite: true
+            });
 
-const file = req.file; // Assuming you're using multer for file uploads
+            console.log('Cloudinary Upload Result:', cloudResponse); // Debug log
+        }
 
-        // cloudinary upload logic can be added here later
-        const fileUri = getDataUri(file)
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content)
+        // Handle skills
+        let skillsArray = [];
+        if (skills) {
+            skillsArray = skills.split(',');
+        }
 
-let skillsArray;
-if (skills) {
-     const skillsArray = skills.split(',');
-}
-
-        const userId = req.id; // Assuming userId is set in the request by middleware
+        const userId = req.id;
         let user = await User.findById(userId);
 
         if (!user) {
@@ -129,27 +141,21 @@ if (skills) {
         }
 
         // Update user details
+        if (fullname) user.fullname = fullname;
+        if (email) user.email = email;
+        if (phoneNumber) user.phoneNumber = phoneNumber;
+        if (bio) user.profile.bio = bio;
+        if (skills) user.profile.skills = skillsArray;
 
-if(fullname) user.fullname = fullname;
-if(email) user.email = email;
-if(phoneNumber) user.phoneNumber = phoneNumber;
-if(bio) user.profile.bio = bio;
-if(skills) user.profile.skills = skillsArray;
-
-
-
-        
-
-        //resume handling later
-
-        if(cloudResponse){
-            user.profile.resume = cloudResponse.secure_url // save cloudinary
-            
+        // Only update resume if file was uploaded
+        if (cloudResponse) {
+            user.profile.resume = cloudResponse.secure_url;
+            user.profile.resumeOriginalName = file.originalname;
         }
 
         await user.save();
 
-        user = {
+        const responseData = {
             _id: user._id,
             fullname: user.fullname,
             email: user.email,
@@ -160,12 +166,16 @@ if(skills) user.profile.skills = skillsArray;
 
         return res.status(200).json({
             message: "Profile Updated Successfully",
-            user,
+            user: responseData,
             success: true,
         });
 
     } catch (error) {
         console.error("Error in updateProfile:", error);
-        return res.status(500).json({ message: "Internal Server Error", success: false });
+        return res.status(500).json({ 
+            message: "Internal Server Error",
+            success: false,
+            error: error.message
+        });
     }
 }
