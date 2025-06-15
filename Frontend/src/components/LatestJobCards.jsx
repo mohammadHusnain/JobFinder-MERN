@@ -61,7 +61,7 @@ const LatestJobCards = () => {
       
       <div>
         <h1 className="font-medium text-lg">Company Name</h1>
-        <p className="text-sm text-gray-500">India</p>
+        <p className="text-sm text-gray-500">Pakistan</p>
       </div>
 
       <div className="mt-4">
@@ -74,7 +74,7 @@ const LatestJobCards = () => {
       <div className="flex items-center gap-2 mt-4">
         <Badge className="text-blue-700 font-bold" variant="ghost">12 Positions</Badge>
         <Badge className="text-[#F83002] font-bold" variant="ghost">Part Time</Badge>
-        <Badge className="text-[#7290b7] font-bold" variant="ghost">24LPA</Badge>
+        <Badge className="text-[#7290b7] font-bold" variant="ghost">85K</Badge>
       </div>
       
     </div>
