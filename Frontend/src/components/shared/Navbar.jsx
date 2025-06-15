@@ -44,9 +44,21 @@ const Navbar = () => {
 
         <div className="flex items-center gap-7">
           <ul className="flex font-medium items-center gap-5">
-            <Link to='/'>Home</Link>
-            <Link to='/jobs'>Jobs</Link>
-            <Link to='/browse'>Browse</Link>
+            {
+                            user && user.role === 'Recruiter' ? (
+                                <>
+                                    <li><Link to="/admin/companies">Companies</Link></li>
+                                    <li><Link to="/admin/jobs">Jobs</Link></li>
+                                </>
+                            ) : (
+                                <>
+                                    <li><Link to="/">Home</Link></li>
+                                    <li><Link to="/jobs">Jobs</Link></li>
+                                    <li><Link to="/browse">Browse</Link></li>
+                                </>
+                            )
+                        }
+
           </ul>
 
           {
@@ -82,10 +94,14 @@ const Navbar = () => {
                   </div>
                   <div className="flex flex-col my-2 text-gray-600">
 
-                    <div className="flex w-fit items-center gap-2 cursor-pointer">
-                      <User2 />
-                      <Button variant="link"> <Link to='/profile'> View Profile </Link></Button>
-                    </div>
+                   {
+                                                user && user.role === 'student' && (
+                                                    <div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                        <User2 />
+                                                        <Button variant="link"> <Link to="/profile">View Profile</Link></Button>
+                                                    </div>
+                                                )
+                                            }
 
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut />
