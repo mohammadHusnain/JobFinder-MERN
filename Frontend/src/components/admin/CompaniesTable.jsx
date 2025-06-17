@@ -1,5 +1,5 @@
 // CompaniesTable.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -17,10 +17,30 @@ import {
   PopoverContent,
 } from '@radix-ui/react-popover';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const CompaniesTable = () => {
 
-  const { companies } = useSelector(store => store.company)
+  const { companies , searchCompanyByText } = useSelector(store => store.company)
+  const [filterCompany, setFilterCompany] = useState(companies)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+
+const filteredCompany = companies.length >= 0 && companies.filter((company)=>{
+
+  if(!searchCompanyByText){
+    return true;
+  }
+return company?.name?.toLowerCase().includes(searchCompanyByText.toLowerCase())
+
+
+})
+
+setFilterCompany(filteredCompany)
+    
+  }, [companies , searchCompanyByText])
+  
 
   return (
     <div>
@@ -36,13 +56,12 @@ const CompaniesTable = () => {
         </TableHeader>
         <TableBody>
           {
-            companies?.map((company) => {
-              return (
-                <div key={company._id}>
+            filterCompany?.map((company) => (
+              
                   <TableRow>
                     <TableCell>
                       <Avatar>
-                        <AvatarImage src="https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg" />
+                        <AvatarImage src={company.logo} />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                     </TableCell>
@@ -56,7 +75,7 @@ const CompaniesTable = () => {
                   </button> */}
                         </PopoverTrigger>
                         <PopoverContent className="w-32 bg-white border shadow-md p-2 rounded">
-                          <div className="flex items-center gap-2">
+                          <div onClick={() => navigate(`/admin/companies/${company._id}`)} className="flex items-center gap-2">
                             <Edit2 size={16} />
                             <span>Edit</span>
                           </div>
@@ -64,9 +83,7 @@ const CompaniesTable = () => {
                       </Popover>
                     </TableCell>
                   </TableRow>
-                </div>
-              )
-            })
+            ))
           }
         </TableBody>
       </Table>
