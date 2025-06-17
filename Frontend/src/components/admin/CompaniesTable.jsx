@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 
 const CompaniesTable = () => {
 
-  const {companies} = useSelector(store => store.company)
+  const { companies } = useSelector(store => store.company)
 
   return (
     <div>
@@ -35,39 +35,39 @@ const CompaniesTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-           {
-                companies?.map((company)=>{
-                  return(
-<div key={company._id}>
-<TableRow>
-            <TableCell>
-              <Avatar>
-                <AvatarImage src="https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </TableCell>
-            <TableCell>{company.name}</TableCell>
-            <TableCell>{company.createdAt.split('T')[0]}</TableCell>
-            <TableCell className="text-right cursor-pointer">
-              <Popover>
-                <PopoverTrigger> <MoreHorizontal/>
-                  {/* <button className="text-sm text-blue-600 flex items-center gap-1">
+          {
+            companies?.map((company) => {
+              return (
+                <div key={company._id}>
+                  <TableRow>
+                    <TableCell>
+                      <Avatar>
+                        <AvatarImage src="https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                    </TableCell>
+                    <TableCell>{company.name}</TableCell>
+                    <TableCell>{company.createdAt.split('T')[0]}</TableCell>
+                    <TableCell className="text-right cursor-pointer">
+                      <Popover>
+                        <PopoverTrigger> <MoreHorizontal />
+                          {/* <button className="text-sm text-blue-600 flex items-center gap-1">
                     ✏️ Edit
                   </button> */}
-                </PopoverTrigger>
-                <PopoverContent className="w-32 bg-white border shadow-md p-2 rounded">
-                  <div className="flex items-center gap-2">
-                    <Edit2 size={16} />
-                    <span>Edit</span>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </TableCell>
-          </TableRow>
-</div>
-                  )
-                })
-              }
+                        </PopoverTrigger>
+                        <PopoverContent className="w-32 bg-white border shadow-md p-2 rounded">
+                          <div className="flex items-center gap-2">
+                            <Edit2 size={16} />
+                            <span>Edit</span>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </TableCell>
+                  </TableRow>
+                </div>
+              )
+            })
+          }
         </TableBody>
       </Table>
     </div>
