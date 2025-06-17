@@ -16,8 +16,12 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from '@radix-ui/react-popover';
+import { useSelector } from 'react-redux';
 
 const CompaniesTable = () => {
+
+  const {companies} = useSelector(store => store.company)
+
   return (
     <div>
       <Table>
@@ -31,15 +35,19 @@ const CompaniesTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
+           {
+                companies?.map((company)=>{
+                  return(
+<div key={company._id}>
+<TableRow>
             <TableCell>
               <Avatar>
                 <AvatarImage src="https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </TableCell>
-            <TableCell>Company Name</TableCell>
-            <TableCell>18-07-2024</TableCell>
+            <TableCell>{company.name}</TableCell>
+            <TableCell>{company.createdAt.split('T')[0]}</TableCell>
             <TableCell className="text-right cursor-pointer">
               <Popover>
                 <PopoverTrigger> <MoreHorizontal/>
@@ -56,6 +64,10 @@ const CompaniesTable = () => {
               </Popover>
             </TableCell>
           </TableRow>
+</div>
+                  )
+                })
+              }
         </TableBody>
       </Table>
     </div>
