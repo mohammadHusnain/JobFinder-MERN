@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Card</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white flex items-center justify-center min-h-screen relative">
+
+  <!-- Apply Button - Top Middle -->
+  <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
+    <button 
+      id="applyBtn"
+      class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-lg"
+      onclick="sendApplicationEmail()"
+    >
+      Apply Now
+    </button>
+  </div>
+
+  <div class="max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow">
+    <!-- Company -->
+    <h2 class="text-lg font-semibold text-gray-900">CyberSoft</h2>
+    <p class="text-gray-500 mb-3">Pakistan</p>
+
+    <!-- Job Title -->
+    <h3 class="text-xl font-bold text-black mb-2">Data Scientist</h3>
+
+    <!-- Job Description -->
+    <p class="text-gray-700 text-justify mb-4">
+      We are seeking a Data Scientist to extract meaningful insights from large datasets and drive data-informed
+      decision-making. You will work with cross-functional teams to build predictive models, visualize data trends,
+      and implement machine learning solutions to solve real-world business problems..
+    </p>
+
+    <!-- Tags -->
+    <div class="flex flex-wrap gap-2">
+      <span class="px-3 py-1 text-sm text-blue-700 bg-blue-100 rounded-full font-semibold">10 Positions</span>
+      <span class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-full font-semibold">Full-Time</span>
+      <span class="px-3 py-1 text-sm text-gray-700 bg-gray-100 rounded-full font-semibold">2500K</span>
+    </div>
+  </div>
+
+  <script>
+    function sendApplicationEmail() {
+      const button = document.getElementById('applyBtn');
+      const originalText = button.textContent;
+      
+      // Change button text to show loading
+      button.textContent = 'Sending Application...';
+      button.disabled = true;
+      button.classList.add('opacity-50');
+
+      // Get current date and time
+      const now = new Date();
+      const dateString = now.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      const timeString = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      // Email content
+      const subject = 'Job Application - Data Scientist Position at CyberSoft';
+      const body = `Dear Hiring Manager,
+
+I hope this email finds you well. I am writing to express my interest in the Data Scientist position at CyberSoft.
+
+Application Details:
+- Position: Data Scientist
+- Company: CyberSoft
+- Application Status: In Progress
+- Application Date: ${dateString}
+- Application Time: ${timeString}
+
+I am excited about the opportunity to contribute to your data science team and help drive data-informed decision-making through predictive models and machine learning solutions.
+
+I look forward to hearing from you regarding the next steps in the application process.
+
+Best regards,
+[Your Name]`;
+
+      // Create mailto link
+      const mailtoLink = `mailto:husnainbhinder682@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      // Open email client
+      window.location.href = mailtoLink;
+
+      // Reset button after a short delay
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+        button.classList.remove('opacity-50');
+        
+        // Show success message
+        showNotification('Application sent successfully!', 'success');
+      }, 2000);
+    }
+
+    function showNotification(message, type) {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `fixed top-20 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+      }`;
+      notification.textContent = message;
+
+      // Add to page
+      document.body.appendChild(notification);
+
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>

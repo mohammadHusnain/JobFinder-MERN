@@ -38,7 +38,7 @@ const jobSchema = new mongoose.Schema(
       required: true, // e.g., Full-time, Part-time, Internship
     },
 
-    experienceLevel: {
+    experience: {
       type: Number, // e.g., "1-3 years", "3-5 years"
       required: true,
     },

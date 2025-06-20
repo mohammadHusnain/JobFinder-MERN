@@ -11,16 +11,18 @@ export const postJob = async (req, res) => {
             location, 
             salary, 
             jobType, 
-            experienceLevel,  // Keep this (matches Postman's updated field)
+            experience,  // Keep this (matches Postman's updated field)
             position, 
             companyId 
         } = req.body;
 
         const userId = req.id;
+
+        console.log(req.body); // Log the request body for debugging
         
         // Validation (unchanged, but now checks for experienceLevel)
         if (!title || !description || !requirements || !location || 
-            !salary || !jobType || !experienceLevel || !position || !companyId) {
+            !salary || !jobType || !experience || !position || !companyId) {
             return res.status(400).json({ message: "All fields are required", success: false });
         }
 
@@ -32,7 +34,7 @@ export const postJob = async (req, res) => {
             salary: Number(salary.replace(/[^0-9]/g, "")), // Handles "$2000/month" → 2000
             location,
             jobType,
-            experienceLevel,  // No renaming needed (Postman sends experienceLevel)
+            experience,  // No renaming needed (Postman sends experienceLevel)
             position,
             company: companyId,
             created_by: userId,

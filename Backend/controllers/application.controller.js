@@ -75,27 +75,30 @@ export const getAppliedJobs = async (req, res) => {
 // get Applicants , how much users have applied for a job
 
 export const getApplicants = async (req, res) => {
-    try {
-        const jobId = req.params.id; // Extract job ID from request parameters
+  try {
+    const jobId = req.params.id;
 
-        const job = await Job.findById(jobId).populate({
-            path:"applications",
-            options:{sort:{createdAt:-1}},
-            populate: {
-                  path: 'applicant', // Populate the applicant field
-        }
-    })
+    // safer direct query on Application model
+    const applications = await Application.find({ job: jobId })
+      .sort({ createdAt: -1 })
+      .populate("applicant");
 
-    if(!job){
-        return res.status(404).json({ message: "Job not found", success: false });
-    }
+    return res.status(200).json({
+      job: {
+        _id: jobId,
+        applications
+      },
+      success: true
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error fetching applicants",
+      error: error.message,
+      success: false
+    });
+  }
+};
 
-    return res.status(200).json({ job, success: true });
-
-} catch (error) {
-        return res.status(500).json({ message: "Error fetching applicants", error: error.message, success: false });
-    }
-}
 
 
 // update status of candidate
