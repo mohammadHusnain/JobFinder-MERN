@@ -81,7 +81,7 @@ isResume ? <a target='blank' href={user?.profile?.resume} className='text-blue-5
 {/* Application Table*/}
 <AppliedJobTable/>
 </div>
-<UpdateProfileDialog open={open}  setOpen={setOpen}/>
+{/* <UpdateProfileDialog open={open}  setOpen={setOpen}/> */}
     </div>
   )
 }
