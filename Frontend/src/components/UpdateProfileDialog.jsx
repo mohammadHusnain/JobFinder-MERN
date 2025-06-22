@@ -16,7 +16,7 @@ import axios from 'axios'
 import { toast } from 'sonner'
 import { setUser } from '@/redux/authSlice'
 
-const UpdateProfileDialog = ({ open, setOpen }) => {
+const UpdateProfiledialog = ({ open, setOpen }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((store) => store.auth)
 
@@ -211,4 +211,4 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
   )
 }
 
-export default UpdateProfileDialog
+export default UpdateProfiledialog

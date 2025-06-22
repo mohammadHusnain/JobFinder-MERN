@@ -1,0 +1,16 @@
+Frontend/node_modules
+node_modules/*
+Backend/node_modules
+Frontend/dist
+Backend/dist
+
+Frontend/.env
+Frontend/.env.local
+Frontend/.env.development.local
+Frontend/.env.test.local
+Frontend/.env.production.local
+Backend/.env
+Backend/.env.local  
+Backend/.env.development.local
+Backend/.env.test.local
+Backend/.env.production.local
