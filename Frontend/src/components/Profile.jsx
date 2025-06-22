@@ -7,7 +7,7 @@ import { Contact, Mail, Pen } from 'lucide-react'
 import { Badge } from './ui/badge'
 import { Label } from './ui/label'
 import AppliedJobTable from './AppliedJobTable'
-import UpdateProfiledialog from '../components/UpdateProfiledialog'
+import UpdateProfileDialog from './UpdateProfileDialog'
 import { useSelector } from 'react-redux'
 import useGetAppliedJobs from '../hooks/useGetAppliedJobs'
 
@@ -82,7 +82,7 @@ isResume ? <a target='blank' href={user?.profile?.resume} className='text-blue-5
 {/* Application Table*/}
 <AppliedJobTable/>
 </div>
-<UpdateProfiledialog open={open}  setOpen={setOpen}/>
+<UpdateProfileDialog open={open}  setOpen={setOpen}/>
     </div>
   )
 }
