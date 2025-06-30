@@ -3,10 +3,10 @@ import Navbar from '../shared/Navbar'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button' 
 import { useNavigate } from 'react-router-dom' 
-import { useDispatch, useSelector } from 'react-redux' 
+import { useDispatch } from 'react-redux' 
 import AdminJobsTable from './AdminJobsTable'
-import useGetAllAdminJobs from '../../hooks/useGetAllAdminJobs'
-import { setSearchJobByText } from '../../redux/jobSlice'
+import useGetAllAdminJobs from '@/hooks/useGetAllAdminJobs'
+import { setSearchJobByText } from '@/redux/jobSlice'
 
 const AdminJobs = () => {
   useGetAllAdminJobs();
@@ -14,14 +14,9 @@ const AdminJobs = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Debug: Log the current jobs state
-  const { allAdminJobs } = useSelector(state => state.job);
-  console.log('Current Jobs:', allAdminJobs);
-
   useEffect(() => {
     dispatch(setSearchJobByText(input));
-  }, [input, dispatch]);
-
+  }, [input]);
   return (
     <div>
       <Navbar />
@@ -30,7 +25,6 @@ const AdminJobs = () => {
           <Input
             className="w-fit"
             placeholder="Filter by name, role"
-            value={input}
             onChange={(e) => setInput(e.target.value)}
           />
           <Button onClick={() => navigate("/admin/jobs/create")}>New Jobs</Button>

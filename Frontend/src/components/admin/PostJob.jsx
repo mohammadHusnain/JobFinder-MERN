@@ -6,12 +6,12 @@ import { Button } from '../ui/button'
 import { useSelector } from 'react-redux'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import axios from 'axios'
-import { JOB_API_END_POINT } from '../../components/utils/constant'
+import { JOB_API_END_POINT } from '@/utils/constant'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
-// const companyArray = [];
+const companyArray = [];
 
 const PostJob = () => {
     const [input, setInput] = useState({
@@ -171,7 +171,7 @@ const PostJob = () => {
                         loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Post New Job</Button>
                     }
                     {
-                        companies.length === 0 && <p className='text-xs text-red-600 font-bold text-center my-3'>*Please register a company first before posting the Jobs</p>
+                        companies.length === 0 && <p className='text-xs text-red-600 font-bold text-center my-3'>*Please register a company first, before posting a jobs</p>
                     }
                 </form>
             </div>

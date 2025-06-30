@@ -1,102 +1,99 @@
 import { Job } from "../models/job.model.js";
 
-// job posting function by admin or company
-
+// admin post krega job
 export const postJob = async (req, res) => {
     try {
-        const { 
-            title, 
-            description, 
-            requirements, 
-            location, 
-            salary, 
-            jobType, 
-            experience,  // Keep this (matches Postman's updated field)
-            position, 
-            companyId 
-        } = req.body;
-
+        const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
         const userId = req.id;
 
-        console.log(req.body); // Log the request body for debugging
-        
-        // Validation (unchanged, but now checks for experienceLevel)
-        if (!title || !description || !requirements || !location || 
-            !salary || !jobType || !experience || !position || !companyId) {
-            return res.status(400).json({ message: "All fields are required", success: false });
+        if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
+            return res.status(400).json({
+                message: "Somethin is missing.",
+                success: false
+            })
+        };
+        // Validate salary is a number
+        if (isNaN(Number(salary))) {
+            return res.status(400).json({
+                message: "Salary must be a valid number.",
+                success: false
+            });
         }
-
-        // Create job (map Postman's data directly)
         const job = await Job.create({
             title,
             description,
             requirements: requirements.split(","),
-            salary: Number(salary.replace(/[^0-9]/g, "")), // Handles "$2000/month" → 2000
+            salary: Number(salary),
             location,
             jobType,
-            experience,  // No renaming needed (Postman sends experienceLevel)
+            experienceLevel: experience,
             position,
             company: companyId,
-            created_by: userId,
+            created_by: userId
         });
-
-        return res.status(201).json({ 
-            message: "Job posted successfully", 
-            job, 
-            success: true 
+        return res.status(201).json({
+            message: "New job created successfully.",
+            job,
+            success: true
         });
     } catch (error) {
-        return res.status(500).json({ 
-            message: "Job posting failed", 
-            error: error.message, 
-            success: false 
-        });
+        console.log(error);
     }
-};
-
-// Function to get all jobs with optional keyword search
-
+}
+// for jobseeker
 export const getAllJobs = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
-        const query = {
+        const location = req.query.location;
+        const jobType = req.query.jobType;
+        const experienceLevel = req.query.experienceLevel;
+        const salary = req.query.salary;
+        let query = {
             $or: [
-                { title: { $regex: keyword, $options: "i" } }, // Case-insensitive search
-                { description: { $regex: keyword, $options: "i" } }, // Case-insensitive search
+                { title: { $regex: keyword, $options: "i" } },
+                { description: { $regex: keyword, $options: "i" } },
             ]
         };
-
-       const jobs = await Job.find(query).populate({
-        path:"company"
-       }).sort({createdAt:-1})
-
-       if (!jobs ) {
-            return res.status(404).json({ message: "No jobs found", success: false });
-        }
-        return res.status(200).json({ jobs, success: true });
-
+        if (location) query.location = location;
+        if (jobType) query.jobType = jobType;
+        if (experienceLevel) query.experienceLevel = Number(experienceLevel);
+        if (salary) query.salary = { $gte: Number(salary) };
+        const jobs = await Job.find(query).populate({
+            path: "company"
+        }).sort({ createdAt: -1 });
+        if (!jobs) {
+            return res.status(404).json({
+                message: "Jobs not found.",
+                success: false
+            })
+        };
+        return res.status(200).json({
+            jobs,
+            success: true
+        })
     } catch (error) {
-        // Handle error appropriately
-        return res.status(500).json({ message: "Error fetching jobs", error: error.message, success: false });
+        console.log(error);
     }
 }
-
-// get job by id for job seeker
-
+// jobseeker
 export const getJobById = async (req, res) => {
     try {
-        const jobId = req.params.id; // Extract job ID from request parameters
-        const job = await Job.findById(jobId).populate("company", "name" ) // Populate company name
+        const jobId = req.params.id;
+        const job = await Job.findById(jobId).populate({
+            path:"applications"
+        });
         if (!job) {
-            return res.status(404).json({ message: "Job not found", success: false });
-        }
+            return res.status(404).json({
+                message: "Jobs not found.",
+                success: false
+            })
+        };
         return res.status(200).json({ job, success: true });
     } catch (error) {
-        return res.status(500).json({ message: "Error fetching job", error: error.message, success: false });
+        console.log(error);
     }
 }
-
-// how many jobs have admin or company posted
+// admin kitne job create kra hai abhi tk
 export const getAdminJobs = async (req, res) => {
     try {
         const adminId = req.id;

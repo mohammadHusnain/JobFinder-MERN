@@ -1,144 +1,117 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage } from "../ui/avatar";
-import { User2, LogOut } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
-import { USER_API_END_POINT } from "../utils/constant";
-import axios from "axios";
-import { setUser } from "@/redux/authSlice";
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Button } from '../ui/button'
+import { Avatar, AvatarImage } from '../ui/avatar'
+import { LogOut, User2, Sun, Moon } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
+import { USER_API_END_POINT } from '@/utils/constant'
+import { setUser } from '@/redux/authSlice'
+import { toast } from 'sonner'
+import PropTypes from 'prop-types';
 
-const Navbar = () => {
-  const { user } = useSelector(state => state.auth);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const Navbar = ({ darkMode, setDarkMode }) => {
+    const { user } = useSelector(store => store.auth);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-
-  const logoutHandler = async () => {
-    try {
-      const res = await axios.get(`${USER_API_END_POINT}/logout`, {
-        withCredentials: true,
-      });
-      if (res.data.success) {
-        dispatch(setUser(null));
-        navigate('/');
-        toast.success(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+    const logoutHandler = async () => {
+        try {
+            const res = await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
+            if (res.data.success) {
+                dispatch(setUser(null));
+                navigate("/");
+                toast.success(res.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message);
+        }
     }
-  };
-
-  const handleApplyClick = () => {
-    setLoading(true);
-    // Open the popup immediately to avoid popup blocking
-    const popup = window.open('/job.html', '_blank', 'width=800,height=600');
-    
-    // Show loading state for 5 seconds
-    setTimeout(() => {
-      setLoading(false);
-      // Focus the popup after loading
-      if (popup && !popup.closed) {
-        popup.focus();
-      }
-    }, 5000);
-  };
-
-  return (
-    <div className="bg-white shadow">
-      <div className="flex items-center justify-between mx-auto max-w-6xl h-16 relative px-4">
-        {/* Left - Logo */}
-        <div>
-          <h1 className="text-2xl font-bold">
-            JOB <span className="text-blue-600">FINDER</span>
-          </h1>
-        </div>
-
-        {/* Center - Apply Online Button */}
-        <div className="absolute left-1/2 -translate-x-1/2">
-          {user?.role === "JobSeeker" && (
-            <>
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  <p className="text-blue-600 font-medium text-sm">Finding The Best Jobs...</p>
+    return (
+        <div className={darkMode ? 'bg-[#0a1833]' : 'bg-white'}>
+            <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
+                <div>
+                    <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : ''}`}>JOB<span className='text-[#3b82f6]'>FINDER</span></h1>
                 </div>
-              ) : (
-                <button
-                  onClick={handleApplyClick}
-                  className="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-700 transition"
-                >
-                  Apply Online
-                </button>
-              )}
-            </>
-          )}
-        </div>
+                <div className='flex items-center gap-12'>
+                    <ul className={`flex font-medium items-center gap-5 ${darkMode ? 'text-white' : ''}`}>
+                        {
+                            user && user.role === 'recruiter' ? (
+                                <>
+                                    <li><Link to="/admin/companies">Companies</Link></li>
+                                    <li><Link to="/admin/jobs">Jobs</Link></li>
+                                </>
+                            ) : (
+                                <>
+                                    <li><Link to="/">Home</Link></li>
+                                    <li><Link to="/jobs">Jobs</Link></li>
+                                    <li><Link to="/browse">Browse</Link></li>
+                                </>
+                            )
+                        }
 
-        {/* Right - Nav & Auth */}
-        <div className="flex items-center gap-7">
-          <ul className="flex font-medium items-center gap-5">
-            {user?.role === "Recruiter" ? (
-              <>
-                <li><Link to="/admin/companies">Companies</Link></li>
-                <li><Link to="/admin/jobs">Jobs</Link></li>
-              </>
-            ) : (
-              <>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/jobs">Jobs</Link></li>
-                <li><Link to="/browse">Browse</Link></li>
-              </>
-            )}
-          </ul>
 
-          {!user ? (
-            <div className="flex items-center gap-2">
-              <Link to="/login"><Button variant="outline">Login</Button></Link>
-              <Link to="/signup"><Button className="bg-gray-800 text-white hover:bg-gray-900">Sign Up</Button></Link>
+                    </ul>
+                    {
+                        !user ? (
+                            <div className='flex items-center gap-2'>
+                                <Link to="/login"><Button variant="outline">Login</Button></Link>
+                                <Link to="/signup"><Button className="bg-[#6A38C2] hover:bg-[#5b30a6]">Signup</Button></Link>
+                                {/* Dark mode toggle after Signup with gap */}
+                                <span className="ml-4 flex items-center cursor-pointer select-none" onClick={() => setDarkMode(dm => !dm)} aria-label="Toggle dark mode">
+                                    {darkMode ? <Sun className="w-6 h-6 text-[#3b82f6]" /> : <Moon className="w-6 h-6 text-[#0a1833]" />}
+                                </span>
+                            </div>
+                        ) : (
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Avatar className="cursor-pointer">
+                                        <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                                    </Avatar>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-80">
+                                    <div className=''>
+                                        <div className='flex gap-2 space-y-2'>
+                                            <Avatar className="cursor-pointer">
+                                                <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                                            </Avatar>
+                                            <div>
+                                                <h4 className='font-medium'>{user?.fullname}</h4>
+                                                <p className='text-sm text-muted-foreground'>{user?.profile?.bio}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex flex-col my-2 text-gray-600'>
+                                            {
+                                                user && user.role === 'jobseeker' && (
+                                                    <div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                        <User2 />
+                                                        <Button variant="link"> <Link to="/profile">View Profile</Link></Button>
+                                                    </div>
+                                                )
+                                            }
+
+                                            <div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                <LogOut />
+                                                <Button onClick={logoutHandler} variant="link">Logout</Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        )
+                    }
+
+                </div>
             </div>
-          ) : (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Avatar className="cursor-pointer">
-                  <AvatarImage src={user?.profile?.profilePhoto} alt="Profile" />
-                </Avatar>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="flex gap-4 space-y-2">
-                  <Avatar>
-                    <AvatarImage src={user?.profile?.profilePhoto} alt="User" />
-                  </Avatar>
-                  <div>
-                    <h4 className="font-medium">{user?.fullname}</h4>
-                    <p className="text-sm text-muted-foreground">{user?.profile?.bio}</p>
-                  </div>
-                </div>
-                <div className="flex flex-col my-2 text-gray-600">
-                  {user?.role?.toLowerCase() === 'jobseeker' && (
-                    <div className="flex w-fit items-center gap-2 cursor-pointer mb-2">
-                      <User2 />
-                      <Button variant="link" asChild>
-                        <Link to="/profile">Profile</Link>
-                      </Button>
-                    </div>
-                  )}
-                  <div className="flex w-fit items-center gap-2 cursor-pointer">
-                    <LogOut />
-                    <Button onClick={logoutHandler} variant="link">Logout</Button>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
+
         </div>
-      </div>
-    </div>
-  );
+    )
+}
+
+Navbar.propTypes = {
+  darkMode: PropTypes.bool.isRequired,
+  setDarkMode: PropTypes.func.isRequired,
 };
 
-export default Navbar;
+export default Navbar

@@ -1,40 +1,27 @@
 import mongoose from "mongoose";
 
-const companySchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      unique: true, // Ensure company names are unique
-      sparse: true // Allows multiple null values while maintaining uniqueness for actual values
-
+const companySchema = new mongoose.Schema({
+    name:{
+        type:String,
+        required:true,
+        unique:true
     },
-
-    description: {
-      type: String,
-    }, 
-
-    website: {
-      type: String, // URL to the company's website
+    description:{
+        type:String, 
     },
-
-    location: {
-        type: String, // Location of the company
+    website:{
+        type:String 
     },
-
-    logo: {
-      type: String, // URL to the company logo
+    location:{
+        type:String 
     },
-
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to the User model (Recruiter)
-      required: true,
+    logo:{
+        type:String // URL to company logo
     },
-  },
-  {
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
-  }
-);
-
-export const Company = mongoose.model("Company", companySchema);  
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        required:true
+    }
+},{timestamps:true})
+export const Company = mongoose.model("Company", companySchema);

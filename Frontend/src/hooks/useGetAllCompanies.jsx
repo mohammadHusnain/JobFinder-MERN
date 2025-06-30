@@ -1,6 +1,5 @@
 import { setCompanies} from '@/redux/companySlice'
-// import { setAllJobs } from '@/redux/jobSlice'
-import { COMPANY_API_END_POINT } from '../../src/components/utils/constant'
+import { COMPANY_API_END_POINT} from '@/utils/constant'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -11,7 +10,7 @@ const useGetAllCompanies = () => {
         const fetchCompanies = async () => {
             try {
                 const res = await axios.get(`${COMPANY_API_END_POINT}/get`,{withCredentials:true});
-                console.log(res.data.company);
+                console.log('called');
                 if(res.data.success){
                     dispatch(setCompanies(res.data.companies));
                 }
@@ -20,7 +19,7 @@ const useGetAllCompanies = () => {
             }
         }
         fetchCompanies();
-    },[dispatch])
+    },[])
 }
 
 export default useGetAllCompanies

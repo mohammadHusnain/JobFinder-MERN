@@ -1,65 +1,43 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel';
 import { Button } from './ui/button';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { setSearchedQuery } from '@/redux/jobSlice';
 
 const category = [
-     "Frontend Developer",
+    "Frontend Developer",
     "Backend Developer",
-    "Data Scientist",
-    "ML Engineer",
-    "UI/UX Designer",
-    "Full-Stack Developer",
-    "DevOps Engineer",
-    "Product Manager"
-];
+    "Data Science",
+    "Graphic Designer",
+    "FullStack Developer"
+]
 
 const CategoryCarousel = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const handleJobSearch = (query) => {
+    const searchJobHandler = (query) => {
         dispatch(setSearchedQuery(query));
         navigate("/browse");
-    };
+    }
 
     return (
-        <section className="py-10 bg-white">
-            <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-                    Explore Career Paths
-                </h2>
-                <Carousel 
-                    opts={{ 
-                        align: "start",
-                        loop: true
-                    }} 
-                    className="w-full max-w-3xl mx-auto"
-                >
-                    <CarouselContent>
-                        {category.map((item, index) => (
-                            <CarouselItem 
-                                key={`${item}-${index}`} 
-                                className="md:basis-1/2 lg:basis-1/3 px-2"
-                            >
-                                <Button
-                                    onClick={() => handleJobSearch(item)}
-                                    variant="outline"
-                                    className="rounded-full w-full py-5 border-gray-200 hover:bg-gray-50 transition-colors"
-                                >
-                                    {item}
-                                </Button>
+        <div>
+            <Carousel className="w-full max-w-xl mx-auto my-20">
+                <CarouselContent>
+                    {
+                        category.map((cat, index) => (
+                            <CarouselItem className="md:basis-1/2 lg-basis-1/3">
+                                <Button onClick={()=>searchJobHandler(cat)} variant="outline" className="rounded-full">{cat}</Button>
                             </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="hidden md:flex" />
-                    <CarouselNext className="hidden md:flex" />
-                </Carousel>
-            </div>
-        </section>
-    );
-};
+                        ))
+                    }
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+            </Carousel>
+        </div>
+    )
+}
 
-export default CategoryCarousel;
+export default CategoryCarousel
